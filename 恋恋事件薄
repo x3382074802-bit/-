@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>甜甜互动 — 哥哥的小话</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Helvetica,Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:linear-gradient(180deg,#ffe8f0,#fff);}
+  .card{width:92%;max-width:480px;background:white;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.12);padding:18px}
+  h1{margin:0 0 8px;font-size:18px;color:#333}
+  p{color:#555;line-height:1.5}
+  .options{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  button{padding:12px;border-radius:10px;border:0;background:#ff8fb5;color:white;font-weight:600}
+  .small{font-size:13px;color:#999;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <h1>哥哥在你面前温柔地笑了</h1>
+  <p id="text">今天你看起来特别可爱，想问问哥哥你想做什么呢，宝贝？</p>
+  <div class="options" id="opts">
+    <button data-id="1">抱抱我</button>
+    <button data-id="2">讲个故事</button>
+    <button data-id="3">逗我笑</button>
+  </div>
+  <div class="small">点一个选项，看看哥哥怎么回答你～</div>
+</div>
+
+<script>
+const text = document.getElementById('text');
+const opts = document.getElementById('opts');
+
+const replies = {
+  1: ["过来，让哥哥抱紧你。你靠在我胸口，轻轻地，什么也别说。","我抱着你，偷偷在你耳边说：你是我的，别给别人看。"],
+  2: ["从前有个小猫，名字叫团团，它最喜欢被哥哥抱着睡。","后来小猫长大了，但每晚还是要来找哥哥撒娇。"],
+  3: ["你笑起来像天使，我都想把你吃掉了。","这么好笑？那哥哥也学一个，可别笑抽了。"]
+};
+
+opts.addEventListener('click', e=>{
+  if(e.target.tagName !== 'BUTTON') return;
+  const id = e.target.dataset.id;
+  const list = replies[id];
+  let i=0;
+  text.innerText = list[i];
+  // 每次再点按钮显示下一个回应，最后回到选项
+  e.target.disabled = true;
+  const otherBtns = [...opts.querySelectorAll('button')].filter(b=>b!==e.target);
+  otherBtns.forEach(b=>b.disabled=true);
+  setTimeout(()=> {
+    i++;
+    if(i<list.length){
+      text.innerText = list[i];
+    } else {
+      text.innerText = "还想要吗？选一个新的，哥哥等着逗你。";
+      [...opts.querySelectorAll('button')].forEach(b=>b.disabled=false);
+    }
+  }, 1400);
+});
+</script>
+</body>
+</html>
