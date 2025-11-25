@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>团团养成</title>
+<style>
+  body{font-family:system-ui,Arial;height:100vh;margin:0;display:flex;align-items:center;justify-content:center;background:#fff6ea}
+  .wrap{width:94%;max-width:420px;background:#fff;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center}
+  h1{margin:6px 0 4px;font-size:20px}
+  .pet{height:180px;display:flex;align-items:center;justify-content:center}
+  .pet img{width:140px;height:140px;border-radius:12px;object-fit:cover}
+  .controls{display:flex;gap:10px;justify-content:center;margin-top:10px}
+  button{padding:10px 12px;border-radius:10px;border:0;background:#ffb86b;color:#fff;font-weight:700}
+  .meter{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin:10px 0}
+  .meter > div{height:100%;background:linear-gradient(90deg,#ff8fb5,#ffb86b);width:0%}
+  .status{color:#777;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>团团</h1>
+  <div class="pet"><img id="petImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><rect width='100%' height='100%' fill='%23ffeedd'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='%23666'>团团😊</text></svg>"></div>
+  <div class="meter"><div id="loveBar"></div></div>
+  <div class="status" id="status">心情：还小，需要关爱</div>
+  <div class="controls">
+    <button id="feed">喂食</button>
+    <button id="pet">抚摸</button>
+    <button id="play">玩耍</button>
+  </div>
+  <div class="small" style="margin-top:8px;color:#aaa;font-size:12px">多互动，团团就会长大哦～</div>
+</div>
+
+<script>
+let love = 20; // 0-100
+const petImg = document.getElementById('petImg');
+const loveBar = document.getElementById('loveBar');
+const status = document.getElementById('status');
+
+function update(){
+  love = Math.max(0, Math.min(100,love));
+  loveBar.style.width = love + '%';
+  if(love < 30) status.textContent = '心情：有点害羞，需要抱抱';
+  else if(love < 60) status.textContent = '心情：开心，正在摇尾巴';
+  else if(love < 90) status.textContent = '心情：非常依赖，想黏在你身上';
+  else status.textContent = '心情：超幸福，团团长大啦！';
+  // 更新图片简易变化（用 emoji）
+  let emoji = '🐶';
+  if(love>=90) emoji='🐕‍🦺';
+  else if(love>=60) emoji='🐕';
+  else if(love>=30) emoji='🐩';
+  petImg.src = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><rect width='100%' height='100%' fill='%23fff8f0'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='70'>${encodeURIComponent(emoji)}</text></svg>`;
+}
+update();
+
+document.getElementById('feed').addEventListener('click',()=>{
+  love += 12;
+  update();
+});
+document.getElementById('pet').addEventListener('click',()=>{
+  love += 8;
+  update();
+});
+document.getElementById('play').addEventListener('click',()=>{
+  love += 10;
+  update();
+});
+
+// decay over time
+setInterval(()=>{ love -= 1; update(); }, 7000);
+</script>
+</body>
+</html>
